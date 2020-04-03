@@ -1,20 +1,32 @@
 import React from 'react';
 import { Layout } from 'antd';
-import { observer } from 'mobx-react';
+import { Switch, Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
 
 import './App.css';
-import { useStore } from '../common';
+
+import Home from '../home';
+import Form from '../form';
 
 const { Content } = Layout;
 
-export default observer(() => {
-  const store = useStore();
-
+export default () => {
   return (
-    <Layout className="App">
-      <Content>
-        {store.message}
-      </Content>
-    </Layout>
+    <Router>
+      <Layout className="App">
+        <Content>
+          <Switch>
+            <Route path={['/create', '/update/:id']}>
+              <Form />
+            </Route>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route path="*">
+              <Redirect to="/" />
+            </Route>
+          </Switch>
+        </Content>
+      </Layout>
+    </Router>
   );
-});
+};
