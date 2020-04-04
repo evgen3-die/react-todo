@@ -1,80 +1,46 @@
 import React, { FunctionComponent } from 'react';
 import { Select, Tag } from 'antd';
-import { TagProps } from 'antd/lib/tag';
 import { Member } from '@todo/shared/interfaces';
-import { CustomTagProps } from 'rc-select/lib/interface/generator';
 
 import styles from "./Members.module.css";
 
 interface MembersProps {
   members?: Member[];
   editing: boolean;
-}
-
-interface GetTagProps extends TagProps {
-  label: CustomTagProps['label'];
-  key?: string;
+  allMembers: Member[];
 }
 
 const { Option } = Select;
-const allMembers: Member[] = [
-  {
-    id: '0',
-    name: 'Pavel'
-  },
-  {
-    id: '1',
-    name: 'Fedor'
-  }
-];
 
-const getTag = ({
-  closable,
-  onClose,
-  label,
-  key
-}: GetTagProps) => {
-  return (
-    <Tag
-      key={key}
-      className={styles.member}
-      color="gold"
-      closable={closable}
-      onClose={onClose}
-    >
-      {label}
-    </Tag>
-  );
-};
-
-const Members: FunctionComponent<MembersProps> = ({ members, editing }) => {
-  if (editing) {
-    return (
-      <Select
-        className={styles.members}
-        tagRender={({ closable, onClose, label }) => getTag({ closable, onClose, label })}
-        mode="multiple"
-      >
-        {allMembers.map(({ id, name }) => (
-          <Option key={id} value={id}>
-            {name}
-          </Option>
-        ))}
-      </Select>
-    );
-  }
-
-  if (!members) {
+const Members: FunctionComponent<MembersProps> = ({ members, editing, allMembers }) => {
+  if (!members && !editing) {
     return null;
   }
 
   return (
-    <div className={styles.members}>
-      {members.map(({ id, name }) => getTag({
-        label: name,
-        key: id
-      }))}
-    </div>
+    <Select
+      disabled={!editing}
+      placeholder="Добавить участников..."
+      mode="multiple"
+      className={styles.members}
+      defaultValue={members?.map(({ id }) => id)}
+      tagRender={({ closable, onClose, label }) => (
+        <Tag
+          className={styles.member}
+          color="blue"
+          closable={closable && editing}
+          onClose={onClose}
+        >
+          {label}
+        </Tag>
+      )}
+    >
+      {allMembers.map(({ id, name }) => (
+        <Option key={id} value={id}>
+          {name}
+        </Option>
+      ))}
+    </Select>
   );
 };
 

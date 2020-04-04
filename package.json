@@ -9,6 +9,6 @@
   "scripts": {
     "start": "run-p start:server start:client",
     "start:client": "wait-on tcp:3001 && lerna run --scope @todo/client --stream start",
-    "start:server": "lerna run --scope @todo/server --stream start"
+    "start:server": "lerna run --scope @todo/server --stream start:dev"
   }
 }

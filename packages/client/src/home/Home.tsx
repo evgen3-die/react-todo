@@ -1,59 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { observer } from 'mobx-react';
 import { Todo as TodoInterface } from '@todo/shared/interfaces';
+import { Button } from 'antd';
 
+import { store } from '../common';
 import Todo from '../todo';
+import Skeleton from './skeleton';
 import styles from './Home.module.css';
 
-const todoList: TodoInterface[] = [
-  {
-    id: '0',
-    title: 'Сделать задачи с описанием',
-    timestamp: 1585984125,
-    content: 'Описание',
-    members: [
-      {
-        id: '0',
-        name: 'Pavel'
-      },
-      {
-        id: '1',
-        name: 'Fedor'
-      }
-    ]
-  },
-  {
-    id: '1',
-    title: 'Сделать задачи с описанием',
-    timestamp: 1585984125,
-    content: [
-      {
-        id: '0',
-        title: 'Пункт'
-      },
-      {
-        id: '1',
-        title: 'Еще пункт'
-      }
-    ],
-    members: [
-      {
-        id: '0',
-        name: 'Pavel'
-      }
-    ]
+function remove({ id }: TodoInterface) {
+  if (id) {
+    store.removeTodo(id);
   }
-];
+}
 
-export default () => {
+export default observer(() => {
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(true);
+
+  useEffect(() => {
+    store.init().then(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <Skeleton />;
+  }
+
   return (
     <>
-      {todoList.map(todo => (
+      <Button
+        className={styles.create}
+        type="primary"
+        size="large"
+        onClick={() => setCreating(true)}
+      >
+        Создать
+      </Button>
+      {store.todoList.map(todo => (
         <Todo
           className={styles.todo}
           key={todo.id}
+          onClickDelete={() => remove(todo)}
+          allMembers={store.members}
           {...todo}
         />
       ))}
     </>
   );
-};
+});

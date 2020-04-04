@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
 import { Card } from 'antd';
 import { EditOutlined, DeleteOutlined, CheckOutlined, StopOutlined } from '@ant-design/icons';
-import { Todo as TodoInterface } from '@todo/shared/interfaces';
+import { Todo as TodoInterface, Member } from '@todo/shared/interfaces';
 
 import Content from './content';
 import Members from './members';
@@ -11,6 +11,8 @@ const convertToDate = (timestamp: number) => (new Date(timestamp * 1000)).toLoca
 
 interface TodoProps extends TodoInterface {
   className?: string;
+  onClickDelete?: () => void;
+  allMembers: Member[];
 }
 
 const placeholder = 'Добавить заголовок...';
@@ -20,12 +22,14 @@ const Todo: FunctionComponent<TodoProps> = ({
   title,
   timestamp,
   content,
-  members
+  members,
+  onClickDelete,
+  allMembers
 }) => {
   const date = timestamp ? convertToDate(timestamp) : null;
   const [editing, setEditing] = useState(false);
 
-  const deleteButton = <DeleteOutlined key="delete" />;
+  const deleteButton = <DeleteOutlined key="delete" onClick={onClickDelete} />;
   const staticButtons = [
     <EditOutlined key="edit" onClick={() => setEditing(true)} />,
     deleteButton
@@ -57,6 +61,7 @@ const Todo: FunctionComponent<TodoProps> = ({
       <Members
         members={members}
         editing={editing}
+        allMembers={allMembers}
       />
     </Card>
   );
