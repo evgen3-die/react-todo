@@ -1,0 +1,16 @@
+.header {
+  color: white;
+  font-weight: 700;
+  padding: 0 20px;
+}
+
+.layout {
+  min-height: 100vh;
+}
+
+.content {
+  margin: 0 auto;
+  max-width: 600px;
+  width: 100%;
+  padding: 20px;
+}

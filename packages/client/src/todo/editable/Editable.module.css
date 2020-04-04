@@ -1,0 +1,7 @@
+.editable:focus {
+  outline: 0;
+}
+
+.placeholder {
+  color: #d9d9d9;
+}

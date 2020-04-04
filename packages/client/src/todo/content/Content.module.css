@@ -1,0 +1,17 @@
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox {
+  align-self: flex-start;
+  margin-right: 6px;
+}
+
+.label {
+  flex-grow: 1;
+}
+
+.add {
+  margin-top: 6px;
+}
