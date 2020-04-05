@@ -28,12 +28,14 @@ const Content: FunctionComponent<ContentProps> = ({ content, editing, onChange }
   };
 
   const typeSwitcher = editing && (
-    <Switch
-      checked={isArray(content)}
-      checkedChildren="Текстом"
-      unCheckedChildren="Списком"
-      onChange={onSwitchChange}
-    />
+    <div className={styles.switchOuter}>
+      <Switch
+        className={styles.switch}
+        checked={isArray(content)}
+        onChange={onSwitchChange}
+      />
+      Списком
+    </div>
   );
 
   if (!isArray(content)) {
@@ -79,14 +81,15 @@ const Content: FunctionComponent<ContentProps> = ({ content, editing, onChange }
         </div>
       ))}
       {editing && (
-        <Button
-          className={styles.add}
-          type="dashed"
-          size="small"
-          onClick={() => onChange([...content, { title: '', checked: false, id: generateId() }])}
-        >
-          Добавить
-        </Button>
+        <div className={styles.add}>
+          <Button
+            type="dashed"
+            size="small"
+            onClick={() => onChange([...content, { title: '', checked: false, id: generateId() }])}
+          >
+            Добавить пункт
+          </Button>
+        </div>
       )}
     </>
   );

@@ -11,8 +11,8 @@
   flex-grow: 1;
 }
 
-.add {
-  margin-top: 6px;
+.item + .add {
+  margin-top: 9px;
 }
 
 .remove {
@@ -24,4 +24,14 @@
 
 .remove:hover {
   color: #1890ff;
+}
+
+.switchOuter {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.switch {
+  margin-right: 6px;
 }
