@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx';
-import { Todo as TodoInterface, Member } from '@todo/shared/interfaces';
+import { Todo as TodoInterface } from '@todo/shared/interfaces';
 import { fetcher } from '.';
 
 const headersForJSON = {
@@ -7,7 +7,7 @@ const headersForJSON = {
 };
 
 class Store {
-  @observable members: Member[] = [];
+  @observable members: string[] = [];
   @observable todoList: TodoInterface[] = [];
 
   @action async fetchMembers() {

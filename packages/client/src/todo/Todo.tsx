@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
 import { Card } from 'antd';
 import { EditOutlined, DeleteOutlined, CheckOutlined, StopOutlined } from '@ant-design/icons';
-import { Todo as TodoInterface, Member } from '@todo/shared/interfaces';
+import { Todo as TodoInterface } from '@todo/shared/interfaces';
 
 import Content from './content';
 import Members from './members';
@@ -16,7 +16,7 @@ interface TodoProps extends TodoInterface {
   onDeleteClick?: () => void;
   onStopClick?: () => void;
   onCheckClick?: (todo: TodoInterface) => void;
-  allMembers: Member[];
+  allMembers: string[];
   defaultEditing?: boolean;
 }
 

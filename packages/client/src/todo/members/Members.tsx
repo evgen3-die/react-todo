@@ -1,14 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import { Select, Tag } from 'antd';
-import { Member } from '@todo/shared/interfaces';
 
 import styles from './Members.module.css';
 
 interface MembersProps {
-  members?: Member[];
+  members?: string[];
   editing: boolean;
-  allMembers: Member[];
-  onChange: (members: Member[]) => void;
+  allMembers: string[];
+  onChange: (members: string[]) => void;
 }
 
 const { Option } = Select;
@@ -18,8 +17,6 @@ const Members: FunctionComponent<MembersProps> = ({ members, editing, allMembers
     return null;
   }
 
-  const ids = members?.map(({ id }) => id);
-
   return (
     <Select
       disabled={!editing}
@@ -27,8 +24,8 @@ const Members: FunctionComponent<MembersProps> = ({ members, editing, allMembers
       showSearch={false}
       mode="multiple"
       className={styles.members}
-      value={ids?.length ? ids : undefined}
-      onChange={ids => onChange(allMembers.filter(({ id }) => ids.includes(id)))}
+      value={members?.length ? members : undefined}
+      onChange={members => onChange(allMembers.filter(member => members.includes(member)))}
       tagRender={({ closable, onClose, label }) => (
         <Tag
           className={styles.member}
@@ -40,9 +37,9 @@ const Members: FunctionComponent<MembersProps> = ({ members, editing, allMembers
         </Tag>
       )}
     >
-      {allMembers.map(({ id, name }) => (
-        <Option key={id} value={id}>
-          {name}
+      {allMembers.map(member => (
+        <Option key={member} value={member}>
+          {member}
         </Option>
       ))}
     </Select>
