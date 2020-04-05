@@ -1,3 +1,7 @@
 .editing {
   border-color: #1890ff;
 }
+
+.title {
+  white-space: normal;
+}

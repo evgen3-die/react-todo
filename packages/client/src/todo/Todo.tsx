@@ -91,6 +91,7 @@ const Todo: FunctionComponent<TodoProps> = ({
       className={`${editing ? styles.editing : ''} ${className}`}
       title={
         <Editable
+          className={styles.title}
           html={title ?? ''}
           disabled={!editing}
           onChange={e => setTitle(e.target.value)}
