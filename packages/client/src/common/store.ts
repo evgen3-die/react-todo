@@ -2,6 +2,10 @@ import { observable, action } from 'mobx';
 import { Todo as TodoInterface, Member } from '@todo/shared/interfaces';
 import { fetcher } from '.';
 
+const headersForJSON = {
+  'Content-Type': 'application/json'
+};
+
 class Store {
   @observable members: Member[] = [];
   @observable todoList: TodoInterface[] = [];
@@ -31,15 +35,25 @@ class Store {
   }
 
   @action async createTodo(todo: TodoInterface) {
-    const response = await fetcher(`/`, {
+    const response = await fetcher('/', {
       method: 'post',
       body: JSON.stringify(todo),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: headersForJSON
     });
 
     this.todoList.unshift(await response.json());
+  }
+
+  @action async updateTodo(todo: TodoInterface) {
+    const { id } = todo;
+    const response = await fetcher(`/${id}`, {
+      method: 'put',
+      body: JSON.stringify(todo),
+      headers: headersForJSON
+    });
+
+    const index = this.todoList.findIndex(todo => todo.id === id);
+    this.todoList[index] = await response.json();
   }
 }
 

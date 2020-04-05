@@ -58,6 +58,7 @@ export default observer(() => {
           key={todo.id}
           onDeleteClick={() => remove(todo)}
           allMembers={store.members}
+          onCheckClick={newTodo => store.updateTodo({ ...todo, ...newTodo })}
           {...todo}
         />
       ))}
