@@ -7,6 +7,8 @@ import Content from './content';
 import Members from './members';
 import Editable from './editable';
 
+import styles from './Todo.module.css';
+
 const convertToDate = (timestamp: number) => (new Date(timestamp * 1000)).toLocaleDateString();
 
 interface TodoProps extends TodoInterface {
@@ -70,7 +72,7 @@ const Todo: FunctionComponent<TodoProps> = ({
 
   return (
     <Card
-      className={className}
+      className={`${editing ? styles.editing : ''} ${className}`}
       title={
         <Editable
           html={title ?? ''}
