@@ -16,7 +16,7 @@ function remove({ id }: TodoInterface) {
 
 export default observer(() => {
   const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(true);
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     store.init().then(() => setLoading(false));
@@ -28,14 +28,23 @@ export default observer(() => {
 
   return (
     <>
-      <Button
-        className={styles.create}
-        type="primary"
-        size="large"
-        onClick={() => setCreating(true)}
-      >
-        Создать
-      </Button>
+      {creating ? (
+        <Todo
+          key="create"
+          className={styles.todo}
+          allMembers={store.members}
+          defaultEditing
+        />
+      ) : (
+        <Button
+          className={styles.create}
+          type="primary"
+          size="large"
+          onClick={() => setCreating(true)}
+        >
+          Создать
+        </Button>
+      )}
       {store.todoList.map(todo => (
         <Todo
           className={styles.todo}

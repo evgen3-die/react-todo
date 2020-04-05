@@ -1,6 +1,7 @@
 export interface ListItem {
   id?: string;
   title: string;
+  checked: boolean;
 }
 
 export interface Member {

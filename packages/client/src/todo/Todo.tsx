@@ -13,21 +13,33 @@ interface TodoProps extends TodoInterface {
   className?: string;
   onClickDelete?: () => void;
   allMembers: Member[];
+  defaultEditing?: boolean;
 }
 
 const placeholder = 'Добавить заголовок...';
 
 const Todo: FunctionComponent<TodoProps> = ({
   className,
-  title,
   timestamp,
-  content,
-  members,
   onClickDelete,
-  allMembers
+  allMembers,
+  defaultEditing,
+  ...props
 }) => {
   const date = timestamp ? convertToDate(timestamp) : null;
-  const [editing, setEditing] = useState(false);
+
+  const [editing, setEditing] = useState(defaultEditing ?? false);
+
+  const [title, setTitle] = useState(props.title);
+  const [content, setContent] = useState(props.content);
+  const [members, setMembers] = useState(props.members);
+
+  const onStopClick = () => {
+    setTitle(props.title);
+    setContent(props.content);
+    setMembers(props.members);
+    setEditing(false);
+  };
 
   const deleteButton = <DeleteOutlined key="delete" onClick={onClickDelete} />;
   const staticButtons = [
@@ -36,7 +48,7 @@ const Todo: FunctionComponent<TodoProps> = ({
   ];
   const editingButtons = [
     <CheckOutlined key="check" onClick={() => setEditing(false)} />,
-    <StopOutlined key="stop" onClick={() => setEditing(false)} />,
+    <StopOutlined key="stop" onClick={onStopClick} />,
     deleteButton
   ];
 
@@ -47,7 +59,7 @@ const Todo: FunctionComponent<TodoProps> = ({
         <Editable
           html={title ?? ''}
           disabled={!editing}
-          onChange={() => {}}
+          onChange={e => setTitle(e.target.value)}
           placeholder={placeholder}
         />
       }
@@ -57,11 +69,13 @@ const Todo: FunctionComponent<TodoProps> = ({
       <Content
         content={content}
         editing={editing}
+        onChange={setContent}
       />
       <Members
         members={members}
         editing={editing}
         allMembers={allMembers}
+        onChange={setMembers}
       />
     </Card>
   );

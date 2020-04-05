@@ -1,7 +1,10 @@
 .members {
-  font-size: 0;
   margin-top: 12px;
   display: block;
+}
+
+.members :global .ant-select-selection-placeholder {
+  left: 6px;
 }
 
 .member {
