@@ -3,8 +3,18 @@
   display: block;
 }
 
-.members :global .ant-select-selection-placeholder {
+.members :global(.ant-select-selection-placeholder) {
   left: 6px;
+}
+
+.members:global(.ant-select-disabled) :global(.ant-select-selector) {
+  cursor: default;
+  background-color: #fafafa;
+  border-color: #f0f0f0;
+}
+
+.members:global(.ant-select-disabled) :global(.ant-select-selector input) {
+  cursor: default;
 }
 
 .member {

@@ -24,6 +24,7 @@ const Members: FunctionComponent<MembersProps> = ({ members, editing, allMembers
     <Select
       disabled={!editing}
       placeholder="Добавить участников..."
+      showSearch={false}
       mode="multiple"
       className={styles.members}
       value={ids?.length ? ids : undefined}
