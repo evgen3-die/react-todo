@@ -20,13 +20,6 @@ class Store {
     this.todoList = await response.json();
   }
 
-  @action init() {
-    return Promise.all([
-      this.fetchMembers(),
-      this.fetchTodoList()
-    ]);
-  }
-
   @action async removeTodo(id: string) {
     this.todoList = this.todoList.filter(todo => todo.id !== id);
     await fetcher(`/${id}`, {

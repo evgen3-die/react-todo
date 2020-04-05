@@ -9,51 +9,52 @@ import Editable from './editable';
 
 import styles from './Todo.module.css';
 
+type ContentType = TodoInterface['content'];
+
 const convertToDate = (timestamp: number) => (new Date(timestamp * 1000)).toLocaleDateString();
+const getContentWithoutEmptyTitles = ((content: ContentType) => {
+  if (Array.isArray(content)) {
+    return content.filter(({ title }) => title.trim());
+  }
+
+  return content;
+});
 
 interface TodoProps extends TodoInterface {
   className?: string;
-  onDeleteClick?: () => void;
-  onStopClick?: () => void;
-  onCheckClick?: (todo: TodoInterface) => void;
   allMembers: string[];
   defaultEditing?: boolean;
+  onDelete?: () => void;
+  onCancel?: () => void;
+  onSave?: (todo: TodoInterface) => void;
 }
-
-const placeholder = 'Добавить заголовок...';
 
 const Todo: FunctionComponent<TodoProps> = ({
   className,
   timestamp,
-  onDeleteClick,
   allMembers,
   defaultEditing,
+  onDelete = () => {},
+  onCancel = () => {},
+  onSave = () => {},
   ...props
 }) => {
   const date = timestamp ? convertToDate(timestamp) : null;
-
   const [editing, setEditing] = useState(defaultEditing ?? false);
-
   const [title, setTitle] = useState(props.title);
   const [content, setContent] = useState(props.content);
   const [members, setMembers] = useState(props.members);
 
-  const getNewTodo = (): TodoInterface => {
-    return {
-      title,
-      members,
-      content: Array.isArray(content) ? content.filter(({ title }) => title.trim()) : content
-    };
-  };
-
   const onCheckClick = () => {
-    const newTodo = getNewTodo();
-    setContent(newTodo.content);
+    const newContent = getContentWithoutEmptyTitles(content);
+    setContent(newContent);
     setEditing(false);
 
-    if (props.onCheckClick) {
-      props.onCheckClick(newTodo);
-    }
+    onSave({
+      title,
+      members,
+      content: newContent
+    });
   };
 
   const onStopClick = () => {
@@ -61,26 +62,22 @@ const Todo: FunctionComponent<TodoProps> = ({
     setContent(props.content);
     setMembers(props.members);
     setEditing(false);
-
-    if (props.onStopClick) {
-      props.onStopClick();
-    }
+    onCancel();
   };
 
-  const onContentChange = (content: TodoInterface['content']) => {
+  const onContentChange = (content: ContentType) => {
     setContent(content);
 
-    if (!editing && props.onCheckClick) {
-      props.onCheckClick({
-        content
-      });
+    if (!editing) {
+      onSave({ content });
     }
   };
 
   const staticButtons = [
     <EditOutlined key="edit" onClick={() => setEditing(true)} />,
-    <DeleteOutlined key="delete" onClick={onDeleteClick} />
+    <DeleteOutlined key="delete" onClick={onDelete} />
   ];
+
   const editingButtons = [
     <CheckOutlined key="check" onClick={onCheckClick} />,
     <StopOutlined key="stop" onClick={onStopClick} />
@@ -95,7 +92,7 @@ const Todo: FunctionComponent<TodoProps> = ({
           html={title ?? ''}
           disabled={!editing}
           onChange={e => setTitle(e.target.value)}
-          placeholder={placeholder}
+          placeholder="Добавить заголовок..."
         />
       }
       extra={date}

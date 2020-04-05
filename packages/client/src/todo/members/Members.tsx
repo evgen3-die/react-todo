@@ -17,15 +17,22 @@ const Members: FunctionComponent<MembersProps> = ({ members, editing, allMembers
     return null;
   }
 
+  const onSelectChange = (members: string[]) => {
+    const newMembers = allMembers
+      .filter(member => members.includes(member));
+
+    onChange(newMembers);
+  };
+
   return (
     <Select
       disabled={!editing}
-      placeholder="Добавить участников..."
-      showSearch={false}
-      mode="multiple"
       className={styles.members}
       value={members?.length ? members : undefined}
-      onChange={members => onChange(allMembers.filter(member => members.includes(member)))}
+      showSearch={false}
+      placeholder="Добавить участников..."
+      mode="multiple"
+      onChange={onSelectChange}
       tagRender={({ closable, onClose, label }) => (
         <Tag
           className={styles.member}

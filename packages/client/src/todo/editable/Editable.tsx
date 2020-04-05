@@ -7,12 +7,6 @@ interface EditableProps extends ContentEditableProps {
   placeholder?: string;
 }
 
-const onKeyPress = (e: KeyboardEvent) => {
-  if (e.which === 13) {
-    e.preventDefault();
-  }
-};
-
 const Editable: FunctionComponent<EditableProps> = ({
   placeholder = '',
   html,
@@ -22,6 +16,12 @@ const Editable: FunctionComponent<EditableProps> = ({
 }) => {
   const placeholderVisible = !html && !disabled;
 
+  const onKeyPress = (e: KeyboardEvent) => {
+    if (e.which === 13) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div className={`${className} ${styles.wrap}`}>
       {
@@ -29,8 +29,8 @@ const Editable: FunctionComponent<EditableProps> = ({
         <ContentEditable
           className={styles.editable}
           html={html}
-          onKeyPress={onKeyPress}
           disabled={disabled}
+          onKeyPress={onKeyPress}
           {...props}
         />
       }

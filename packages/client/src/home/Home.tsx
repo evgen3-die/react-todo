@@ -8,17 +8,15 @@ import Todo from '../todo';
 import Skeleton from './skeleton';
 import styles from './Home.module.css';
 
-function remove({ id }: TodoInterface) {
-  if (id) {
-    store.removeTodo(id);
-  }
-}
-
 export default observer(() => {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
-  const onCreateCheckClick = (todo: TodoInterface) => {
+  useEffect(() => {
+    Promise.all([store.fetchTodoList(), store.fetchMembers()]).then(() => setLoading(false));
+  }, []);
+
+  const onCreateSave = (todo: TodoInterface) => {
     const isEmpty = !todo.title && !todo.content?.length && !todo.members?.length;
 
     if (!isEmpty) {
@@ -28,9 +26,11 @@ export default observer(() => {
     setCreating(false);
   };
 
-  useEffect(() => {
-    store.init().then(() => setLoading(false));
-  }, []);
+  const onListDelete = ({ id }: TodoInterface) => {
+    if (id) {
+      store.removeTodo(id);
+    }
+  };
 
   if (loading) {
     return <Skeleton />;
@@ -40,19 +40,19 @@ export default observer(() => {
     <>
       {creating ? (
         <Todo
-          key="create"
           className={styles.todo}
           allMembers={store.members}
+          onCancel={() => setCreating(false)}
+          onSave={onCreateSave}
+          key="create"
           defaultEditing
-          onStopClick={() => setCreating(false)}
-          onCheckClick={onCreateCheckClick}
         />
       ) : (
         <Button
           className={styles.create}
+          onClick={() => setCreating(true)}
           type="primary"
           size="large"
-          onClick={() => setCreating(true)}
         >
           Создать
         </Button>
@@ -61,9 +61,9 @@ export default observer(() => {
         <Todo
           className={styles.todo}
           key={todo.id}
-          onDeleteClick={() => remove(todo)}
           allMembers={store.members}
-          onCheckClick={newTodo => store.updateTodo({ ...todo, ...newTodo })}
+          onDelete={() => onListDelete(todo)}
+          onSave={newTodo => store.updateTodo({ ...todo, ...newTodo })}
           {...todo}
         />
       ))}
