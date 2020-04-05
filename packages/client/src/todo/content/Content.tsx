@@ -15,7 +15,6 @@ interface ContentProps {
 }
 
 const { isArray } = Array;
-const generateId = ((id = 0) => () => `inner-${id++}`)();
 const placeholder = 'Добавить описание...';
 
 const Content: FunctionComponent<ContentProps> = ({ content, editing, onChange }) => {
@@ -23,7 +22,7 @@ const Content: FunctionComponent<ContentProps> = ({ content, editing, onChange }
     if (isArray(content)) {
       onChange('');
     } else {
-      onChange([{ title: '', checked: false, id: generateId() }]);
+      onChange([{ title: '', checked: false }]);
     }
   };
 
@@ -55,27 +54,27 @@ const Content: FunctionComponent<ContentProps> = ({ content, editing, onChange }
   return (
     <>
       {typeSwitcher}
-      {content.map(({ id, title, checked }, i) => (
+      {content.map(({ title, checked }, i) => (
         <div
           className={styles.item}
-          key={id}
+          key={i}
         >
           <Checkbox
             className={styles.checkbox}
             checked={checked}
-            onChange={e => onChange(content.map(item => item.id === id ? { ...item, checked: e.target.checked } : item))}
+            onChange={e => onChange(content.map((item, j) => j === i ? { ...item, checked: e.target.checked } : item))}
           />
           <Editable
             className={styles.label}
             html={title}
             disabled={!editing}
-            onChange={e => onChange(content.map(item => item.id === id ? { ...item, title: e.target.value } : item))}
+            onChange={e => onChange(content.map((item, j) => j === i ? { ...item, title: e.target.value } : item))}
             placeholder={placeholder}
           />
           {editing && (
             <CloseCircleOutlined
               className={styles.remove}
-              onClick={() => onChange(content.filter(item => item.id !== id))}
+              onClick={() => onChange(content.filter((item, j) => j !== i))}
             />
           )}
         </div>
@@ -85,7 +84,7 @@ const Content: FunctionComponent<ContentProps> = ({ content, editing, onChange }
           <Button
             type="dashed"
             size="small"
-            onClick={() => onChange([...content, { title: '', checked: false, id: generateId() }])}
+            onClick={() => onChange([...content, { title: '', checked: false }])}
           >
             Добавить пункт
           </Button>

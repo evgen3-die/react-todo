@@ -29,6 +29,18 @@ class Store {
       method: 'delete'
     });
   }
+
+  @action async createTodo(todo: TodoInterface) {
+    const response = await fetcher(`/`, {
+      method: 'post',
+      body: JSON.stringify(todo),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    this.todoList.unshift(await response.json());
+  }
 }
 
 export default new Store();

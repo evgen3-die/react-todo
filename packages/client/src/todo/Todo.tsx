@@ -11,7 +11,9 @@ const convertToDate = (timestamp: number) => (new Date(timestamp * 1000)).toLoca
 
 interface TodoProps extends TodoInterface {
   className?: string;
-  onClickDelete?: () => void;
+  onDeleteClick?: () => void;
+  onStopClick?: () => void;
+  onCheckClick?: (todo: TodoInterface) => void;
   allMembers: Member[];
   defaultEditing?: boolean;
 }
@@ -21,7 +23,7 @@ const placeholder = 'Добавить заголовок...';
 const Todo: FunctionComponent<TodoProps> = ({
   className,
   timestamp,
-  onClickDelete,
+  onDeleteClick,
   allMembers,
   defaultEditing,
   ...props
@@ -34,22 +36,36 @@ const Todo: FunctionComponent<TodoProps> = ({
   const [content, setContent] = useState(props.content);
   const [members, setMembers] = useState(props.members);
 
+  const onCheckClick = () => {
+    setEditing(false);
+
+    if (props.onCheckClick) {
+      props.onCheckClick({
+        title,
+        members,
+        content: Array.isArray(content) ? content.filter(({ title }) => title.trim()) : content
+      });
+    }
+  };
+
   const onStopClick = () => {
     setTitle(props.title);
     setContent(props.content);
     setMembers(props.members);
     setEditing(false);
+
+    if (props.onStopClick) {
+      props.onStopClick();
+    }
   };
 
-  const deleteButton = <DeleteOutlined key="delete" onClick={onClickDelete} />;
   const staticButtons = [
     <EditOutlined key="edit" onClick={() => setEditing(true)} />,
-    deleteButton
+    <DeleteOutlined key="delete" onClick={onDeleteClick} />
   ];
   const editingButtons = [
-    <CheckOutlined key="check" onClick={() => setEditing(false)} />,
-    <StopOutlined key="stop" onClick={onStopClick} />,
-    deleteButton
+    <CheckOutlined key="check" onClick={onCheckClick} />,
+    <StopOutlined key="stop" onClick={onStopClick} />
   ];
 
   return (

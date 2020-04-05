@@ -18,6 +18,11 @@ export default observer(() => {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
+  const onCreateCheckClick = (todo: TodoInterface) => {
+    store.createTodo(todo);
+    setCreating(false);
+  };
+
   useEffect(() => {
     store.init().then(() => setLoading(false));
   }, []);
@@ -34,6 +39,8 @@ export default observer(() => {
           className={styles.todo}
           allMembers={store.members}
           defaultEditing
+          onStopClick={() => setCreating(false)}
+          onCheckClick={onCreateCheckClick}
         />
       ) : (
         <Button
@@ -49,7 +56,7 @@ export default observer(() => {
         <Todo
           className={styles.todo}
           key={todo.id}
-          onClickDelete={() => remove(todo)}
+          onDeleteClick={() => remove(todo)}
           allMembers={store.members}
           {...todo}
         />
