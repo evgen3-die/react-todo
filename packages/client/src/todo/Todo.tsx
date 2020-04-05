@@ -38,18 +38,21 @@ const Todo: FunctionComponent<TodoProps> = ({
   const [content, setContent] = useState(props.content);
   const [members, setMembers] = useState(props.members);
 
-  const onCheckClick = () => {
-    const newContent = Array.isArray(content) ? content.filter(({ title }) => title.trim()) : content;
+  const getNewTodo = (): TodoInterface => {
+    return {
+      title,
+      members,
+      content: Array.isArray(content) ? content.filter(({ title }) => title.trim()) : content
+    };
+  };
 
-    setContent(newContent);
+  const onCheckClick = () => {
+    const newTodo = getNewTodo();
+    setContent(newTodo.content);
     setEditing(false);
 
     if (props.onCheckClick) {
-      props.onCheckClick({
-        title,
-        members,
-        content: newContent
-      });
+      props.onCheckClick(newTodo);
     }
   };
 
@@ -61,6 +64,16 @@ const Todo: FunctionComponent<TodoProps> = ({
 
     if (props.onStopClick) {
       props.onStopClick();
+    }
+  };
+
+  const onContentChange = (content: TodoInterface['content']) => {
+    setContent(content);
+
+    if (!editing && props.onCheckClick) {
+      props.onCheckClick({
+        content
+      });
     }
   };
 
@@ -90,7 +103,7 @@ const Todo: FunctionComponent<TodoProps> = ({
       <Content
         content={content}
         editing={editing}
-        onChange={setContent}
+        onChange={onContentChange}
       />
       <Members
         members={members}
