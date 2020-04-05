@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, KeyboardEvent } from 'react';
+import React, { FunctionComponent, KeyboardEvent } from 'react';
 import ContentEditable, { Props as ContentEditableProps } from 'react-contenteditable';
 
 import styles from './Editable.module.css';
@@ -13,32 +13,33 @@ const onKeyPress = (e: KeyboardEvent) => {
   }
 };
 
-const Editable: FunctionComponent<ContentEditableProps> = ({
+const Editable: FunctionComponent<EditableProps> = ({
   placeholder = '',
   html,
   className,
   disabled,
   ...props
 }) => {
-  const [focusing, setFocusing] = useState(false);
-  const placeholderVisible = !html && !focusing && !disabled;
-  const classes = [
-    className,
-    styles.editable,
-    placeholderVisible ? styles.placeholder : ''
-  ];
+  const placeholderVisible = !html && !disabled;
 
   return (
-    // @ts-ignore
-    <ContentEditable
-      className={classes.join(' ')}
-      html={placeholderVisible ? placeholder : html}
-      onFocus={() => setFocusing(true)}
-      onBlur={() => setFocusing(false)}
-      onKeyPress={onKeyPress}
-      disabled={disabled}
-      {...props}
-    />
+    <div className={`${className} ${styles.wrap}`}>
+      {
+        // @ts-ignore
+        <ContentEditable
+          className={styles.editable}
+          html={html}
+          onKeyPress={onKeyPress}
+          disabled={disabled}
+          {...props}
+        />
+      }
+      {placeholderVisible && (
+        <div className={styles.placeholder}>
+          {placeholder}
+        </div>
+      )}
+    </div>
   );
 };
 
