@@ -33,7 +33,7 @@ const Content: FunctionComponent<ContentProps> = ({ content, editing, onChange }
         checked={isArray(content)}
         onChange={onSwitchChange}
       />
-      Списком
+      В виде списка
     </div>
   );
 

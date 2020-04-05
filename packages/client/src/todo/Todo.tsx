@@ -39,13 +39,16 @@ const Todo: FunctionComponent<TodoProps> = ({
   const [members, setMembers] = useState(props.members);
 
   const onCheckClick = () => {
+    const newContent = Array.isArray(content) ? content.filter(({ title }) => title.trim()) : content;
+
+    setContent(newContent);
     setEditing(false);
 
     if (props.onCheckClick) {
       props.onCheckClick({
         title,
         members,
-        content: Array.isArray(content) ? content.filter(({ title }) => title.trim()) : content
+        content: newContent
       });
     }
   };

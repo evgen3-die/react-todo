@@ -1,6 +1,9 @@
 .members {
-  margin-top: 24px;
   display: block;
+}
+
+* + .members {
+  margin-top: 24px;
 }
 
 .members :global(.ant-select-selection-placeholder) {
