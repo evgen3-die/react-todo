@@ -19,7 +19,12 @@ export default observer(() => {
   const [creating, setCreating] = useState(false);
 
   const onCreateCheckClick = (todo: TodoInterface) => {
-    store.createTodo(todo);
+    const isEmpty = !todo.title && !todo.content?.length && !todo.members?.length;
+
+    if (!isEmpty) {
+      store.createTodo(todo);
+    }
+
     setCreating(false);
   };
 
